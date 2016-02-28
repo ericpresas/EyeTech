@@ -1,0 +1,10 @@
+<KeyPoint 0x7fead46cc990>
+<KeyPoint 0x7fead46cc9c0>
+<KeyPoint 0x7fead0841600>
+<KeyPoint 0x7fead0841930>
+<KeyPoint 0x7fead0809c00>
+<KeyPoint 0x7fead0809c30>
+<KeyPoint 0x7fead0809c60>
+<KeyPoint 0x7fead0809c90>
+<KeyPoint 0x7fead0809cc0>
+<KeyPoint 0x7fead0809cf0>

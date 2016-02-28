@@ -1,0 +1,52 @@
+import cv2
+ 
+# constants
+IMAGE_SIZE = 100
+MATCH_THRESHOLD = 0
+ 
+# load haar cascade and street image
+roundabout_cascade = cv2.CascadeClassifier('cars3.xml')
+street = cv2.imread('test-0.pgm',0)
+ 
+# do roundabout detection on street image
+
+roundabouts = roundabout_cascade.detectMultiScale(
+    street, 
+    scaleFactor=2, 
+    minNeighbors=0
+    )
+print(roundabouts)
+ 
+# initialize ORB and BFMatcher
+surf = cv2.xfeatures2d.SURF_create(5000)
+bf = cv2.BFMatcher(cv2.NORM_HAMMING,crossCheck=True)
+ 
+# find the keypoints and descriptors for roadsign image
+roadsign = cv2.imread('pos-82.pgm',0)
+kp_r,des_r = surf.detectAndCompute(roadsign,None)
+print (des_r)
+ 
+# loop through all detected objects
+for (x,y,w,h) in roundabouts:
+ 
+    # obtain object from street image
+    obj = street[y:y+h,x:x+w]
+    ratio = IMAGE_SIZE / obj.shape[1]
+    obj = cv2.resize(obj,(int(IMAGE_SIZE),int(obj.shape[0]*ratio)))
+ 
+    # find the keypoints and descriptors for object
+    kp_o, des_o = surf.detectAndCompute(obj,None)
+    if len(kp_o) == 0 or des_o == None: continue
+ 
+    # match descriptors
+    matches = bf.match(des_r,des_o)
+
+
+     
+    # draw object on street image, if threshold met
+    if(len(matches) >= MATCH_THRESHOLD):
+        cv2.rectangle(street,(x,y),(x+w,y+h),(255,0,0),2)
+ 
+# show objects on street image
+cv2.imwrite('street.jpg', street)
+
