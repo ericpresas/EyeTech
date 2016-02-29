@@ -20,7 +20,8 @@ search_params = dict(checks = 50)
 flann = cv2.FlannBasedMatcher(index_params, search_params)
 
 matches = flann.knnMatch(des1,des2,k=2)
-
+sP, dP = Tools.pointsFromMatches(kp1, kp2, matches)
+H, mask = cv2.findHomography(sP, dP, cv2.RANSAC)
 
 print (matches)
 
@@ -32,16 +33,18 @@ for meth in methods:
 # Apply template Matching
 res = cv2.matchTemplate(des1,des2,cv2.TM_CCORR_NORMED)
 
-min_val, max_val, min_loc, max_loc = cv2.minMaxLoc(res)
+min_val, max_val, min_loc, max_loc = cv2.minMaxLoc(des1)
 print (max_loc)
 # If the method is TM_SQDIFF or TM_SQDIFF_NORMED, take minimum
 if method in [cv2.TM_SQDIFF, cv2.TM_SQDIFF_NORMED]:
-  top_left = min_loc
+  top_left  = min_loc 
+  
 else:
-   top_left = max_loc
+  top_left  = max_loc 
+ 
 
 
-bottom_right = (top_left[0] + w, top_left[1] + h)
+bottom_right = (top_left[1] + w, top_left[1] + h)
 
 cv2.rectangle(img2,top_left, bottom_right, 255, 2)
 
